@@ -34,6 +34,6 @@ public class WelcomeController implements AccessDeniedHandler {
         }
 
         httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/403");
-
+    
     }
 }

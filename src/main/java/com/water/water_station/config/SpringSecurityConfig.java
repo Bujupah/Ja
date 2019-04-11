@@ -38,13 +38,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     
             auth.inMemoryAuthentication()
                 .withUser("user")
-                .password("password")
+                .password("{noop}password")
                 .roles("USER")
                 
                 .and()
                 
                 .withUser("admin")
-                .password("password")
+                .password("{noop}password")
                 .roles("ADMIN");
         }
 }

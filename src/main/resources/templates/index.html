@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Home page</title>
+        <title>Smart Station Inspector</title>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
@@ -9,22 +9,16 @@
         <p>
         <span th:text="'Today is: ' + ${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}" th:remove="tag"></span>
 
-        <div sec:authorize="hasRole('ROLE_ADMIN')">
-           
-            <sec:authorize access="hasRole('ROLE_ADMIN')">
-                <p>Mazdazd</p>
-            </sec:authorize>
-            
-            This content is only shown to <b>administrators</b>.
+        
+        <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+            This will only be displayed if authenticated user has role ROLE_ADMIN.
         </div>
-        <div sec:authorize="hasRole('ROLE_USER')">
-            This content is only shown to <b>users</b>.
+        <div th:if="${#authorization.expression('hasRole(''USER'')')}">
+            This will only be displayed if authenticated user has role ROLE_USER.
         </div>
-
 
         <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
         </p>
-
 
         <div th:replace="components/footer :: footer"/>
         

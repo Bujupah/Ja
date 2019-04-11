@@ -7,14 +7,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @SpringBootApplication
-public class PageController {
+public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PageController.class, args);
-    }
-    
-
-    @GetMapping("/")
+		SpringApplication.run(Application.class, args);
+	}
+	@GetMapping("/")
     public String root() {
         return "index";
     }
@@ -54,7 +52,7 @@ public class PageController {
     // ###                                  ###
     @GetMapping("/error/403")
     public String error403() {
-        return "/nope";
+        return "/notfound";
     }
 
     @GetMapping("/access-denied")
