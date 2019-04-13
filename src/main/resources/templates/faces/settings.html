@@ -127,18 +127,18 @@
                                     </style>
                         <form id="regForm">
                             <div class="tab"><center>DATABASE</center>
-                                <p><input placeholder="Database name..." th:value="${g.getDbname()}" oninput="this.className = ''" name="dbname"></p>
-                                <p><input placeholder="Database user..." th:value="${g.getDbuser()}" oninput="this.className = ''" name="dbuser"></p>
-                                <p><input placeholder="Database password..." th:value="${g.getDbpwd()}" oninput="this.className = ''" name="dbpwd" type="password"></p>
+                                <p><input placeholder="Database name..." th:value="${dbname}" oninput="this.className = ''" name="dbname"></p>
+                                <p><input placeholder="Database user..." th:value="${dbuser}" oninput="this.className = ''" name="dbuser"></p>
+                                <p><input placeholder="Database password..." th:value="${dbpwd}" oninput="this.className = ''" name="dbpwd" type="password"></p>
                             </div>
                             <div class="tab"><center>STATION</center>
-                                <p><input placeholder="Entreprise CODE..." th:value="${g.getEntreprise()}" oninput="this.className = ''" name="entreprise"></p>
-                                <p><input placeholder="Station CODE..." th:value="${g.getStation()}" oninput="this.className = ''" name="station"></p>
-                                <p><input placeholder="License CODE..." th:value="${g.getLicense()}" oninput="this.className = ''" name="license" type="password"></p>
+                                <p><input placeholder="Entreprise CODE..." th:value="${entreprise}" oninput="this.className = ''" name="entreprise"></p>
+                                <p><input placeholder="Station CODE..." th:value="${station}" oninput="this.className = ''" name="station"></p>
+                                <p><input placeholder="License CODE..." th:value="${license}" oninput="this.className = ''" name="license" type="password"></p>
                             </div>
                             <div class="tab"><center>VERIFICATION</center>
-                                <p><input placeholder="Username..." th:value="${g.getUname()}" oninput="this.className = ''" name="uname"></p>
-                                <p><input placeholder="Password..." th:value="${g.getPword()}" oninput="this.className = ''" name="pword" type="password"></p>
+                                <p><input placeholder="Username..." th:value="${uname}" oninput="this.className = ''" name="uname"></p>
+                                <p><input placeholder="Password..." th:value="${pword}" oninput="this.className = ''" name="pword" type="password"></p>
                             </div>
                             <div style="overflow:auto;">
                                 <div style="float:right;">
@@ -239,7 +239,7 @@
                                     
                     </section>
                     <section>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem quas adipisci a accusantium eius ut voluptatibus ad impedit nulla, ipsa qui. Quasi temporibus eos commodi aliquid impedit amet, similique nulla.
+                        <div th:text=${gateway.getDbuser()}></div>
                     </section>
                     <section>
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam nemo ducimus eius, magnam error quisquam sunt voluptate labore, excepturi numquam! Alias libero optio sed harum debitis! Veniam, quia in eum.

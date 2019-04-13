@@ -91,7 +91,6 @@ public class PageController{
 
     @GetMapping("/settings")
     public String settings(Model model) {
-        model.addAttribute("g",gateway);
         model.addAttribute("key",5);
         return "index";
     }
@@ -123,10 +122,19 @@ public class PageController{
         gateway.setLicense(license);
         gateway.setUname(uname);
         gateway.setPword(pword);
-        System.out.println("Was here!");
+
         model.addAttribute("key",5);
-        model.addAttribute("g",gateway);
+        model.addAttribute("dbname",dbname);
+        model.addAttribute("dbuser",dbuser);
+        model.addAttribute("dbpwd",dbpwd);
+        model.addAttribute("entreprise",entreprise);
+        model.addAttribute("station",station);
+        model.addAttribute("license",license);
+        model.addAttribute("uname",uname);
+        model.addAttribute("pword",pword);
         
+        model.addAttribute("gateway", gateway);
+        System.out.println(model);
         return "index";
     }
 }
