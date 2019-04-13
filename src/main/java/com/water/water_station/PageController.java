@@ -92,6 +92,11 @@ public class PageController{
     @GetMapping("/settings")
     public String settings(Model model) {
         model.addAttribute("key",5);
+        if(gateway == null){
+            gateway = new Gateway();
+        }
+        model.addAttribute("gateway", gateway);
+
         return "index";
     }
 
@@ -114,6 +119,8 @@ public class PageController{
         if(gateway == null){
             gateway = new Gateway();
         }
+        model.addAttribute("gateway", gateway);
+
         gateway.setDbname(dbname);
         gateway.setDbuser(dbuser);
         gateway.setDbpwd(dbpwd);
