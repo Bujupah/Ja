@@ -1,25 +1,26 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-</head>
-<body>
+    <head>
+        <title>Smart Station Inspector</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <p>
+        <span th:text="'Today is: ' + ${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}" th:remove="tag"></span>
 
-
-<div class="container">
-
-    <div class="starter-template">
-        <h1>User page (Spring Security protected)</h1>
+        
+        <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+            This will only be displayed if authenticated user has role ROLE_ADMIN.
+        </div>
+        <div th:if="${#authorization.expression('hasRole(''USER'')')}">
+            This will only be displayed if authenticated user has role ROLE_USER.
+        </div>
 
         <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-        <form th:action="@{/logout}" method="post">
-            <input type="submit" value="Sign Out"/>
-        </form>
+        </p>
 
-    </div>
-
-</div>
-<!-- /.container -->
-<div th:replace="components/footer :: footer"/>
-
-</body>
+        <div th:replace="components/footer :: footer"/>
+        
+    </body>
 </html>
