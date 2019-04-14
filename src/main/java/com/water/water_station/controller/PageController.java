@@ -1,16 +1,41 @@
-package com.water.water_station;
+package com.water.water_station.controller;
+
+import java.io.IOException;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import com.water.water_station.beans.Gateway;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@RequestMapping(
+        method={RequestMethod.POST,RequestMethod.GET} 
+    )
+
 public class PageController{
     public boolean wasLogged=true;
-	public Gateway gateway;
+    @Autowired private EntityManager manager;
+
+    public Gateway gateway;
+    public boolean config=false;
+
+    
     // ###                                  ###
     // ###                                  ###
     // ###               AUTH               ###
@@ -91,11 +116,12 @@ public class PageController{
 
     @GetMapping("/settings")
     public String settings(Model model) {
-        model.addAttribute("key",5);
         if(gateway == null){
             gateway = new Gateway();
         }
-        model.addAttribute("gateway", gateway);
+        model.addAttribute("gateway",gateway);
+        model.addAttribute("config", config);
+        model.addAttribute("key",5);
 
         return "index";
     }
@@ -106,42 +132,61 @@ public class PageController{
         return "index";
     }
 
-    @GetMapping("/gateway")
+    @Transactional
+    @PostMapping(
+        value="/gateway",
+        headers="Accept=application/x-www-form-urlencoded",
+        consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE,MediaType.APPLICATION_JSON_UTF8_VALUE,MediaType.ALL_VALUE})
     public String gateway(Model model,
-                            @RequestParam String dbname,
-                            @RequestParam String dbuser,
-                            @RequestParam String dbpwd,
-                            @RequestParam String entreprise,
-                            @RequestParam String station,
-                            @RequestParam String license,
-                            @RequestParam String uname,
-                            @RequestParam String pword) {
-        if(gateway == null){
-            gateway = new Gateway();
-        }
+        @Valid Gateway gateway
+        //@RequestParam(value = "uname") String uname,
+        //@RequestParam(value = "pword") String pword ){
+        ){
+        config=!config;
         model.addAttribute("gateway", gateway);
-
-        gateway.setDbname(dbname);
-        gateway.setDbuser(dbuser);
-        gateway.setDbpwd(dbpwd);
-        gateway.setEntreprise(entreprise);
-        gateway.setStation(station);
-        gateway.setLicense(license);
-        gateway.setUname(uname);
-        gateway.setPword(pword);
-
-        model.addAttribute("key",5);
-        model.addAttribute("dbname",dbname);
-        model.addAttribute("dbuser",dbuser);
-        model.addAttribute("dbpwd",dbpwd);
-        model.addAttribute("entreprise",entreprise);
-        model.addAttribute("station",station);
-        model.addAttribute("license",license);
-        model.addAttribute("uname",uname);
-        model.addAttribute("pword",pword);
-        
-        model.addAttribute("gateway", gateway);
-        System.out.println(model);
+        this.manager.persist(gateway);
         return "index";
+
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @PostMapping("/upload") // //new annotation since 4.3
+    public String singleFileUpload(@RequestParam("file") MultipartFile file,
+                                   RedirectAttributes redirectAttributes) {
+
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
+            return "redirect:uploadStatus";
+        }
+
+        try {
+            //Files.write(path, bytes);
+            System.out.println(Base64Utils.encodeToString(file.getBytes()));
+            redirectAttributes.addFlashAttribute("message",
+                    "You successfully uploaded '" + file.getOriginalFilename() + "'");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/uploadStatus";
+    }
+
+    @GetMapping("/uploadStatus")
+    public String uploadStatus() {
+        return "uploadStatus";
+    }
+
 }

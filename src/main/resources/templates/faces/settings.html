@@ -123,24 +123,31 @@
                                     .step.finish {
                                       background-color: cornflowerblue;
                                     }
+                                    input[type="text"]::placeholder {  
+                                        text-align: center; 
+                                    } 
+                                    input[type="password"]::placeholder {  
+                                        text-align: center; 
+                                    } 
                                     </style>
 
-                      <span th:switch=${gateway.getDbname().length()}>
-                              <span th:case="0">
-                            <form id="regForm">
-                                <div class="tab"><center>DATABASE</center>
-                                    <p><input placeholder="Database name..." th:value="${dbname}" oninput="this.className = ''" name="dbname"></p>
-                                    <p><input placeholder="Database user..." th:value="${dbuser}" oninput="this.className = ''" name="dbuser"></p>
-                                    <p><input placeholder="Database password..." th:value="${dbpwd}" oninput="this.className = ''" name="dbpwd" type="password"></p>
+                      <span th:switch=${config}>
+                              <span th:case="false">
+                            <form id="regForm" th:object="${gateway}" th:action="@{/gateway}" method="POST">
+                                <input type="hidden" th:field="*{id}">
+                                <div class="tab"><center>NETWORK</center>
+                                  <p><input th:type="text" placeholder="LABEL" th:field="*{label}"></p>
+                                    <p><input th:type="text" placeholder="IP" oninput="this.className = ''" th:field="*{ip}"></p>
+                                    <p><input th:type="text" placeholder="PORT" oninput="this.className = ''" th:field="*{port}"></p>
                                 </div>
-                                <div class="tab"><center>STATION</center>
-                                    <p><input placeholder="Entreprise CODE..." th:value="${entreprise}" oninput="this.className = ''" name="entreprise"></p>
-                                    <p><input placeholder="Station CODE..." th:value="${station}" oninput="this.className = ''" name="station"></p>
-                                    <p><input placeholder="License CODE..." th:value="${license}" oninput="this.className = ''" name="license" type="password"></p>
+                                <div class="tab"><center>DATABASE</center>
+                                    <p><input th:type="text" placeholder="DATABASE USER" oninput="this.className = ''" th:field="*{db_user}"></p>
+                                    <p><input th:type="password" placeholder="DATABASE PASSWORD" oninput="this.className = ''" th:field="*{db_password}"></p>
+                                    <p><input th:type="text" placeholder="DATABASE NAME" oninput="this.className = ''" th:field="*{db_name}"></p>
                                 </div>
                                 <div class="tab"><center>VERIFICATION</center>
-                                    <p><input placeholder="Username..." th:value="${uname}" oninput="this.className = ''" name="uname"></p>
-                                    <p><input placeholder="Password..." th:value="${pword}" oninput="this.className = ''" name="pword" type="password"></p>
+                                    <p><input th:type="text" placeholder="SETUP ACCOUNT USERNAME" th:value="ADMIN" oninput="this.className = ''" name="uname"></p>
+                                    <p><input th:type="password" placeholder="SETUP ACCOUNT PASSWORD" th:value="admin" oninput="this.className = ''" name="pword" type="password"></p>
                                 </div>
                                 <div style="overflow:auto;">
                                     <div style="float:right;">
@@ -156,18 +163,18 @@
                                 </div>
                               </form> 
                               </span>
-                              <span th:case="*">
+                              <span th:case="false">
                                 <center> CONFIGURATION </center>  
                                 <br>
                                 <table border="1" style="width:100%">
                                   <tr style="height:50px;padding:10px">
                                     <th style="padding:15px;width:50%;">Database name</th>
-                                    <td style="padding:15px;width:50%;" th:text=${gateway.getDbname()}>
+                                    <td th:text="" style="padding:15px;width:50%;">
                                     </td>
                                   </tr>
                                   <tr style="height:50px">
                                     <th style="padding:15px;width:50%;">Database user</th>
-                                    <td th:text=${gateway.getDbuser()} style="padding:15px;width:50%;">
+                                    <td th:text="" style="padding:15px;width:50%;">
                                     </td>
                                   </tr>
                                 </table>
@@ -175,13 +182,18 @@
                                 <table border="1" style="width:100%">
                                   <tr style="height:50px">
                                     <th style="padding:15px;width:50%;">Entreprise</th>
-                                    <td th:text=${gateway.getEntreprise()} style="padding:15px;width:50%;"></td>
+                                    <td th:text="" style="padding:15px;width:50%;"></td>
                                   </tr>
                                   <tr style="height:50px">
                                     <th style="padding:15px;width:50%;">Station</th>
-                                    <td th:text=${gateway.getStation()} style="padding:15px;width:50%;"></td>
+                                    <td th:text="" style="padding:15px;width:50%;"></td>
                                   </tr>
                                 </table>
+                                <div style="overflow:auto;">
+                                  <div style="float:right;">
+                                    <button type="button" id="nextBtn">Edit</button>
+                                  </div>
+                                </div>
                                 <br>
                               </span>
                         </span>    

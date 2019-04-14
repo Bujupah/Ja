@@ -39,7 +39,7 @@ function nextPrev(n) {
         buttons: false,
         dangerMode: false,
     }).then(()=>{
-        window.location.replace("http://localhost:8080/gateway?"+$('#regForm').serialize());
+        $('#regForm').submit();
     });
     //document.getElementById("regForm").submit();
     return false;
