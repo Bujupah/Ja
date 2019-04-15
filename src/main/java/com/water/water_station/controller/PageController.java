@@ -3,6 +3,7 @@ package com.water.water_station.controller;
 import java.io.IOException;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -14,9 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +33,7 @@ public class PageController{
 
     public Gateway gateway;
     public boolean config=false;
+	private boolean wrong=false;
 
     
     // ###                                  ###
@@ -119,8 +119,9 @@ public class PageController{
         if(gateway == null){
             gateway = new Gateway();
         }
-        model.addAttribute("gateway",gateway);
-        model.addAttribute("config", config);
+        model.addAttribute("wrong", wrong);
+        model.addAttribute("gateway", this.gateway);
+        model.addAttribute("config", this.config);
         model.addAttribute("key",5);
 
         return "index";
@@ -138,20 +139,46 @@ public class PageController{
         headers="Accept=application/x-www-form-urlencoded",
         consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE,MediaType.APPLICATION_JSON_UTF8_VALUE,MediaType.ALL_VALUE})
     public String gateway(Model model,
-        @Valid Gateway gateway
-        //@RequestParam(value = "uname") String uname,
-        //@RequestParam(value = "pword") String pword ){
+        @Valid Gateway gateway,
+        @Valid @RequestParam(value = "uname") String uname,
+        @Valid @RequestParam(value = "pword") String pword
         ){
-        config=!config;
+        this.gateway = gateway;
+        System.out.println(uname +" "+pword );
+        if(uname.length() == 5){
+            Query query = manager.createNativeQuery("SELECT count(g.id) FROM gateway_sd g");
+            if(Integer.parseInt(query.getSingleResult().toString()) != 0){
+                System.out.println("UPDATE gateway_sd SET db_name='"+gateway.getDb_name()+"',db_password='"+gateway.getDb_password()+"',db_user='"+gateway.getDb_user()+"',ip='"+gateway.getIp()+"',label='"+gateway.getLabel()+"',port='"+gateway.getPort()+"'");
+                this.manager.createNativeQuery("UPDATE gateway_sd SET db_name='"+gateway.getDb_name()+"',db_password='"+gateway.getDb_password()+"',db_user='"+gateway.getDb_user()+"',ip='"+gateway.getIp()+"',label='"+gateway.getLabel()+"',port='"+gateway.getPort()+"'").executeUpdate();
+                this.manager.flush();
+            }else{
+                this.manager.persist(gateway);
+            }
+            this.wrong = false;
+            this.config = true;
+        }else{
+            this.wrong = true;
+        }
+        System.out.println(this.wrong);
+        model.addAttribute("wrong", wrong);
+        model.addAttribute("config", config);
         model.addAttribute("gateway", gateway);
-        this.manager.persist(gateway);
+        model.addAttribute("key",5);
+        this.manager.clear();
         return "index";
 
     }
 
 
+    @GetMapping("/edit")
+    public String editGateway(Model model){
+        this.config = false;
+        model.addAttribute("config", config);
+        model.addAttribute("gateway", gateway);
+        model.addAttribute("key",5);
 
-
+        return "index";
+    }
 
 
 

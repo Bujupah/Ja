@@ -1,5 +1,8 @@
 package com.water.water_station.config;
 
+import com.water.water_station.beans.Gateway;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Description;

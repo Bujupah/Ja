@@ -39,16 +39,14 @@ public class Gateway {
 	@Column(name = "db_user", columnDefinition="VARCHAR(64)")
     private String db_user;
 	
+	
 	@Column(name = "db_password", columnDefinition="VARCHAR(64)")
     private String db_password;
 	
 	@Column(name = "type", columnDefinition="VARCHAR(64)")
     private String type;
 	
-	@Column(name = "license", columnDefinition="BLOB")
-    private String license;
-	
-	@Column(name = "date", columnDefinition="DATE")
+	@Column(name = "date_mme", columnDefinition="DATE")
     private Date date;
 	
 	@Column(name = "caracteristique_SD_id", columnDefinition="int")
@@ -192,20 +190,6 @@ public class Gateway {
 	 */
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	/**
-	 * @return the license
-	 */
-	public String getLicense() {
-		return license;
-	}
-
-	/**
-	 * @param license the license to set
-	 */
-	public void setLicense(String license) {
-		this.license = license;
 	}
 
 	/**
