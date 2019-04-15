@@ -33,7 +33,8 @@ public class PageController{
 
     public Gateway gateway;
     public boolean config=false;
-	private boolean wrong=false;
+    private boolean wrong=false;
+    private boolean verification = false;
 
     
     // ###                                  ###
@@ -123,6 +124,8 @@ public class PageController{
         model.addAttribute("gateway", this.gateway);
         model.addAttribute("config", this.config);
         model.addAttribute("key",5);
+        model.addAttribute("verification", this.verification);
+
 
         return "index";
     }
@@ -181,39 +184,29 @@ public class PageController{
     }
 
 
-
-
-
-
-
-
-
-
     @PostMapping("/upload") // //new annotation since 4.3
     public String singleFileUpload(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes) {
+                                   Model model) {
 
         if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
-            return "redirect:uploadStatus";
+            model.addAttribute("message", "Please select a file to upload");
+            return "index";
         }
-
         try {
-            //Files.write(path, bytes);
             System.out.println(Base64Utils.encodeToString(file.getBytes()));
-            redirectAttributes.addFlashAttribute("message",
-                    "You successfully uploaded '" + file.getOriginalFilename() + "'");
-
+            this.verification = true;
+            model.addAttribute("message","Successfully uploaded \n '" + file.getOriginalFilename() + "'");
+            model.addAttribute("wrong", wrong);
+            model.addAttribute("config", config);
+            model.addAttribute("gateway", gateway);
+            model.addAttribute("key",5);
+            model.addAttribute("verification", this.verification);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return "redirect:/uploadStatus";
-    }
-
-    @GetMapping("/uploadStatus")
-    public String uploadStatus() {
-        return "uploadStatus";
+        System.out.println(this.verification);
+        
+        return "index";
     }
 
 }

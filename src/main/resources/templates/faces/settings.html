@@ -132,6 +132,7 @@
                                       text-align: center;
                                       left: 15%;
                                       position: relative; 
+                                      width:70%;
                                     }
                                     th{
                                       text-align: center;
@@ -177,7 +178,7 @@
                               <span th:case="true">
                                 <center> CONFIGURATION </center>  
                                 <br>
-                                <table border="1" style="width:70%">
+                                <table border="1">
                                   <tr style="height:35px;padding:10px">
                                     <th style="width:50%;">Station</th>
                                     <td th:text=${gateway.getLabel()} style="width:50%;">
@@ -221,7 +222,26 @@
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam nemo ducimus eius, magnam error quisquam sunt voluptate labore, excepturi numquam! Alias libero optio sed harum debitis! Veniam, quia in eum.
                     </section>
                     <section>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa dicta vero rerum? Eaque repudiandae architecto libero reprehenderit aliquam magnam ratione quidem? Nobis doloribus molestiae enim deserunt necessitatibus eaque quidem incidunt.
+                        <table>
+                          <div th:switch="${verification}">
+                            <div th:case="false">
+                              <tr>
+                                <th><h1>Please upload your license</h1></th>
+                              </tr>
+                              <tr>
+                                <th>
+                                    <form method="POST" action="/upload" enctype="multipart/form-data">
+                                      <input type="file" name="file" /><br/><br/>
+                                      <input type="submit" value="Upload" />
+                                    </form>
+                                  </th>
+                                </tr>
+                              </div>
+                            <div th:case="true">
+                                <th><h1 th:text="${message}"></h1></th>
+                            </div>  
+                          </div>
+                        </table>
                     </section>
                   </div>
                 </div>                
