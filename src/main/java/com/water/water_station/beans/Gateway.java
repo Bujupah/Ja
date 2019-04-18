@@ -1,7 +1,5 @@
 package com.water.water_station.beans;
 
-import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,7 +45,7 @@ public class Gateway {
     private String type;
 	
 	@Column(name = "date_mme", columnDefinition="DATE")
-    private Date date;
+    private String date;
 	
 	@Column(name = "caracteristique_SD_id", columnDefinition="int")
 	private int caract;
@@ -195,14 +193,14 @@ public class Gateway {
 	/**
 	 * @return the date
 	 */
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
 	/**
 	 * @param date the date to set
 	 */
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 

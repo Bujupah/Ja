@@ -1,6 +1,7 @@
 package com.water.water_station.controller;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping(
@@ -149,6 +149,8 @@ public class PageController{
         this.gateway = gateway;
         System.out.println(uname +" "+pword );
         if(uname.length() == 5){
+            Date now = new Date();
+            gateway.setDate(now.getTime()+"");
             Query query = manager.createNativeQuery("SELECT count(g.id) FROM gateway_sd g");
             if(Integer.parseInt(query.getSingleResult().toString()) != 0){
                 System.out.println("UPDATE gateway_sd SET db_name='"+gateway.getDb_name()+"',db_password='"+gateway.getDb_password()+"',db_user='"+gateway.getDb_user()+"',ip='"+gateway.getIp()+"',label='"+gateway.getLabel()+"',port='"+gateway.getPort()+"'");
@@ -209,4 +211,10 @@ public class PageController{
         return "index";
     }
 
+
+    @GetMapping("/test")
+    public String test(Model model) {
+        model.addAttribute("key",7);
+        return "profile/admin/admin";
+    }
 }
