@@ -4,11 +4,84 @@
 
     <body>
         <div th:fragment="users">
-            <h1>Spring Boot file upload example</h1>
-            <form method="POST" action="/upload" enctype="multipart/form-data">
-                <input type="file" name="file" /><br/><br/>
-                <input type="submit" value="Submit" />
-            </form>
+            
+                <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th> Label </th>
+                                <th> Longitude </th>
+                                <th> Latitude </th>
+                                <th> IP </th>
+                                <th> PORT </th>
+                                <th> ETAT </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${lUsers.size() == 0}">
+                                <td colspan="2"> No Datasources Available </td>
+                            </tr>
+                            <tr th:each="user : ${lUser}">
+                                    <td><span th:text="${user.getUsername()}"> username </span></td>
+                                    <td><span th:text="*******"> password </span></td>
+                                    <td><span th:text="${user.getEmail()}"> email </span></td>
+                                    <td><span th:text="${user.getTelephone()}"> telephone </span></td>
+                                    <td><span th:text="${user.getRole()}"> role </span></td>
+                                    <td><span th:text="${user.getClient_sd_id()}"> client id </span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" id="click-me-btn" style="float:right" class="btn btn-outline-dark">ADD</button>
+                    <div id="form-template" class="hidden">
+                        <form id="datasourceForm" th:object="${users}" th:action="@{/user}" method="POST">
+                          <div class="row">
+                              
+                            <div class="col-sm-12"><input th:field=*{label} placeholder="Label" class="swal-content__input" th:type="text"></div>
+                          </div>
+                          <div class="row">
+                              
+                            <div class="col-sm-6"><input th:field="*{longitude}" placeholder="longitude" class="swal-content__input" th:type="text"></div>
+                            
+                            <div class="col-sm-6"><input th:field="*{latitude}" placeholder="latitude" class="swal-content__input" th:type="text"></div>
+                          </div>
+                          <div class="row">
+                            
+                              <div class="col-sm-8"><input th:field="*{ip}" placeholder="IP" class="swal-content__input" th:type="text"></div>
+                              
+                              <div class="col-sm-4"><input th:field="*{port}" placeholder="PORT" class="swal-content__input" th:type="number"></div>
+                          </div>
+                          <br>
+                        </form>    
+                      </div>
+                    <script>
+                      // store form HTML markup in a JS variable
+                      var formTemplate = $('#form-template > form').clone()[0];
+                          $('#form-template').remove();
+
+                          // prepare SweetAlert configuration
+                          var swalConfig = {
+                            title: 'New User',
+                            content: formTemplate,
+                            button: {
+                              text: 'Submit',
+                              closeModal: false
+                            }
+                          };
+
+                          // handle clicks on the "Click me" button
+                          $('#click-me-btn').click(function () {
+                            swal(swalConfig);
+                          });
+
+                          // handle clicks on the "Submit" button of the modal form
+                          $('body').on('click', '.swal-button--confirm', function() {
+                            //simulateAjaxRequest();
+                            $("#datasourceForm").submit();
+                          });
+
+                          
+                    </script>
+
+            
         </div>
     </body>
 </html>

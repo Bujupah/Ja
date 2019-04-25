@@ -1,14 +1,18 @@
 package com.water.water_station.controller;
 
 import java.io.IOException;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.xml.crypto.Data;
 
+import com.water.water_station.beans.Datasource;
 import com.water.water_station.beans.Gateway;
+import com.water.water_station.beans.Users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -32,9 +36,17 @@ public class PageController{
     @Autowired private EntityManager manager;
 
     public Gateway gateway;
+    public Datasource datasource;
+    public Users users;
+
+
+    public List <Users> lUsers = new ArrayList<Users>();
+    public List <Datasource> datasources = new ArrayList<Datasource>();
+
     public boolean config=false;
     private boolean wrong=false;
     private boolean verification = false;
+
 
     
     // ###                                  ###
@@ -55,6 +67,8 @@ public class PageController{
     // ###                                  ###
     @GetMapping("/user")
     public String user(Model model) {
+        this.manager.getTransaction();
+        model.addAttribute("users", users);
         model.addAttribute("key",7);
         return "/profile/user/user";
     }
@@ -119,9 +133,11 @@ public class PageController{
     public String settings(Model model) {
         if(gateway == null){
             gateway = new Gateway();
+            datasource = new Datasource();
         }
         model.addAttribute("wrong", wrong);
         model.addAttribute("gateway", this.gateway);
+        model.addAttribute("datasource", this.datasource);
         model.addAttribute("config", this.config);
         model.addAttribute("key",5);
         model.addAttribute("verification", this.verification);
@@ -133,6 +149,8 @@ public class PageController{
     @GetMapping("/users")
     public String users(Model model) {
         model.addAttribute("key",6);
+        model.addAttribute("users", users);
+        model.addAttribute("users", lUsers);
         return "index";
     }
 
@@ -149,8 +167,6 @@ public class PageController{
         this.gateway = gateway;
         System.out.println(uname +" "+pword );
         if(uname.length() == 5){
-            Date now = new Date();
-            gateway.setDate(now.getTime()+"");
             Query query = manager.createNativeQuery("SELECT count(g.id) FROM gateway_sd g");
             if(Integer.parseInt(query.getSingleResult().toString()) != 0){
                 System.out.println("UPDATE gateway_sd SET db_name='"+gateway.getDb_name()+"',db_password='"+gateway.getDb_password()+"',db_user='"+gateway.getDb_user()+"',ip='"+gateway.getIp()+"',label='"+gateway.getLabel()+"',port='"+gateway.getPort()+"'");
@@ -185,6 +201,45 @@ public class PageController{
         return "index";
     }
 
+    @Transactional
+    @PostMapping(
+        value="/datasource",
+        headers="Accept=application/x-www-form-urlencoded",
+        consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE,MediaType.APPLICATION_JSON_UTF8_VALUE,MediaType.ALL_VALUE})
+    public String datasource(Model model,
+                            @Valid Datasource ds){
+        model.addAttribute("key",5);
+        model.addAttribute("config", this.config);
+        model.addAttribute("gateway", this.gateway);
+        datasources.add(ds);
+        model.addAttribute("datasources", this.datasources);
+
+
+        //this.manager.persist(datasource);
+        System.out.println(datasource.getId());
+        return "index";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @PostMapping("/upload") // //new annotation since 4.3
     public String singleFileUpload(@RequestParam("file") MultipartFile file,
@@ -209,12 +264,5 @@ public class PageController{
         System.out.println(this.verification);
         
         return "index";
-    }
-
-
-    @GetMapping("/test")
-    public String test(Model model) {
-        model.addAttribute("key",7);
-        return "profile/admin/admin";
     }
 }

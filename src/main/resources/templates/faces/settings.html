@@ -1,7 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml" 
-	  xmlns:th="http://www.thymeleaf.org"
-    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-    <body>
+
         <div th:fragment="settings">
                 <div class="tabs">                  
                   <input type="radio" id="tab1" name="tab-control" checked>
@@ -128,18 +125,30 @@
                                     input[type="password"]::placeholder {  
                                         text-align: center; 
                                     } 
-                                    table{
-                                      text-align: center;
-                                      left: 15%;
-                                      position: relative; 
-                                      width:70%;
+                                    .hidden {
+                                      display: none;
                                     }
-                                    th{
-                                      text-align: center;
+
+                                    form > .row {
+                                      margin-bottom: 20px;
                                     }
-                                    th a {
-                                        display: block;
+
+                                    form > .row:last-child {
+                                      margin-bottom: 0;
                                     }
+
+                                    form input.invalid {
+                                      border-color: #dc3545;
+                                    }
+
+                                    form .invalid-feedback {
+                                      color: #dc3545;
+                                      font-size: 14px;
+                                      line-height: 21px;
+                                      margin-top: 4px;
+                                      text-align: left;
+                                    }
+
                                     </style>
 
                       <span th:switch=${config}>
@@ -178,73 +187,210 @@
                               <span th:case="true">
                                 <center> CONFIGURATION </center>  
                                 <br>
-                                <table border="1">
-                                  <tr style="height:35px;padding:10px">
-                                    <th style="width:50%;">Station</th>
-                                    <td th:text=${gateway.getLabel()} style="width:50%;">
+                                <table class="table table-responsive table-striped table-bordered text-center">
+                                  <tr class>
+                                    <td>Station</td>
+                                    <td th:text=${gateway.getLabel()}>
                                     </td>
                                   </tr>
-                                  
-                                  <tr style="height:35px;padding:10px">
-                                    <th style="width:50%;">Database name</th>
-                                    <td th:text=${gateway.getDb_name()} style="width:50%;">
+                                  <tr>
+                                    <td>Database name</td>
+                                    <td th:text=${gateway.getDb_name()}>
                                     </td>
                                   </tr>
 
-                                  <tr style="height:35px">
-                                    <th style="width:50%;">Database user</th>
-                                    <td th:text=${gateway.getDb_user()} style="width:50%;">
+                                  <tr>
+                                    <td>Database user</td>
+                                    <td th:text=${gateway.getDb_user()}>
                                     </td>
                                   </tr>
-                                  <tr style="height:35px">
-                                    <th style="width:50%;">IP Address</th>
-                                    <td th:text=${gateway.getIp()} style="width:50%;"></td>
+                                  <tr>
+                                    <td>IP Address</td>
+                                    <td th:text=${gateway.getIp()}></td>
                                   </tr>
-                                  <tr style="height:35px">
-                                    <th style="width:50%;">Port</th>
-                                    <td th:text=${gateway.getPort()} style="width:50%;"></td>
-                                  </tr>
-                                  <tr style="height:35px">
-                                      <th style="width:50%;" colspan="2">
-                                          <a th:href="@{/edit}">Edit</a>
-                                      </th>
+                                  <tr>
+                                    <td>Port</td>
+                                    <td th:text=${gateway.getPort()}></td>
                                   </tr>
                                 </table>
-                                
-                                <br>
+                                <div style="padding-left: 50%">
+                                    <a class="btn btn-danger" th:href="@{/gateway/delete}">Delete</a>
+                                    <a class="btn btn-primary" th:href="@{/gateway/edit}">Edit</a>
+                                </div>
                               </span>
+                              
                         </span>    
+                        
                     </section>
                     <section>
-                      <div> Lorem </div>
-                    </section>
-                    <section>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam nemo ducimus eius, magnam error quisquam sunt voluptate labore, excepturi numquam! Alias libero optio sed harum debitis! Veniam, quia in eum.
-                    </section>
-                    <section>
-                        <table>
-                          <div th:switch="${verification}">
-                            <div th:case="false">
-                              <tr>
-                                <th><h1>Please upload your license</h1></th>
-                              </tr>
-                              <tr>
-                                <th>
-                                    <form method="POST" action="/upload" enctype="multipart/form-data">
-                                      <input type="file" name="file" /><br/><br/>
-                                      <input type="submit" value="Upload" />
-                                    </form>
-                                  </th>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th> Label </th>
+                                    <th> Longitude </th>
+                                    <th> Latitude </th>
+                                    <th> IP </th>
+                                    <th> PORT </th>
+                                    <th> ETAT </th>
+                                    <th> DATE MEM </th>
+                                    <th> Caract ID </th>
+                                    <th> Gateway ID </th>
                                 </tr>
-                              </div>
-                            <div th:case="true">
-                                <th><h1 th:text="${message}"></h1></th>
-                            </div>  
-                          </div>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${datasources == null}">
+                                    <td colspan="2"> No Datasources Available </td>
+                                </tr>
+                                <tr th:each="ds : ${datasources}">
+                                    <td><span th:text="${ds.getLabel()}"> Label </span></td>
+                                    <td><span th:text="${ds.getLongitude()}"> Longitude </span></td>
+                                    <td><span th:text="${ds.getLatitude}"> Latitude </span></td>
+                                    <td><span th:text="${ds.getIp()}"> IP </span></td>
+                                    <td><span th:text="${ds.getPort()}"> PORT </span></td>
+                                    <td><span th:text="${ds.getEtat()}"> ETAT </span></td>
+                                    <td><span th:text="${ds.getDate_mem()}"> DATE MEM </span></td>
+                                    <td><span th:text="${ds.getCaracteristique_SD_id}"> Caract ID </span></td>
+                                    <td><span th:text="${ds.getGateway_SD_id}"> Gateway ID </span></td>
+                                </tr>
+                            </tbody>
                         </table>
+                        <button type="button" id="click-me-btn" style="float:right" class="btn btn-outline-dark">ADD</button>
+                        <div id="form-template" class="hidden">
+                            <form id="datasourceForm" th:object="${datasource}" th:action="@{/datasource}" method="POST">
+                              <div class="row">
+                                  
+                                <div class="col-sm-12"><input th:field=*{label} placeholder="Label" class="swal-content__input" th:type="text"></div>
+                              </div>
+                              <div class="row">
+                                  
+                                <div class="col-sm-6"><input th:field="*{longitude}" placeholder="longitude" class="swal-content__input" th:type="text"></div>
+                                
+                                <div class="col-sm-6"><input th:field="*{latitude}" placeholder="latitude" class="swal-content__input" th:type="text"></div>
+                              </div>
+                              <div class="row">
+                                
+                                  <div class="col-sm-8"><input th:field="*{ip}" placeholder="IP" class="swal-content__input" th:type="text"></div>
+                                  
+                                  <div class="col-sm-4"><input th:field="*{port}" placeholder="PORT" class="swal-content__input" th:type="number"></div>
+                              </div>
+                              <br>
+                            </form>    
+                          </div>
+                        <script>
+                          // store form HTML markup in a JS variable
+                          var formTemplate = $('#form-template > form').clone()[0];
+                              $('#form-template').remove();
+
+                              // prepare SweetAlert configuration
+                              var swalConfig = {
+                                title: 'New DataSource',
+                                content: formTemplate,
+                                button: {
+                                  text: 'Submit',
+                                  closeModal: false
+                                }
+                              };
+
+                              // handle clicks on the "Click me" button
+                              $('#click-me-btn').click(function () {
+                                swal(swalConfig);
+                              });
+
+                              // handle clicks on the "Submit" button of the modal form
+                              $('body').on('click', '.swal-button--confirm', function() {
+                                //simulateAjaxRequest();
+                                $("#datasourceForm").submit();
+                              });
+
+                              
+                        </script>
+                    </section>
+                    <section>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th> Label </th>
+                                    <th> Longitude </th>
+                                    <th> Latitude </th>
+                                    <th> IP </th>
+                                    <th> PORT </th>
+                                    <th> ETAT </th>
+                                    <th> DATE MEM </th>
+                                    <th> Caract ID </th>
+                                    <th> Gateway ID </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${datasources == null}">
+                                    <td colspan="2"> No sensor Available </td>
+                                </tr>
+                                <tr th:each="ds : ${datasources}">
+                                    <td><span th:text="${ds.getLabel()}"> Label </span></td>
+                                    <td><span th:text="${ds.getLongitude()}"> Longitude </span></td>
+                                    <td><span th:text="${ds.getLatitude}"> Latitude </span></td>
+                                    <td><span th:text="${ds.getIp()}"> IP </span></td>
+                                    <td><span th:text="${ds.getPort()}"> PORT </span></td>
+                                    <td><span th:text="${ds.getEtat()}"> ETAT </span></td>
+                                    <td><span th:text="${ds.getDate_mem()}"> DATE MEM </span></td>
+                                    <td><span th:text="${ds.getCaracteristique_SD_id}"> Caract ID </span></td>
+                                    <td><span th:text="${ds.getGateway_SD_id}"> Gateway ID </span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button type="button" id="click-me-btn" style="float:right" class="btn btn-outline-dark">ADD</button>
+                        <div id="form-template" class="hidden">
+                            <form id="datasourceForm" th:object="${datasource}" th:action="@{/datasource}" method="POST">
+                              <div class="row">
+                                  
+                                <div class="col-sm-12"><input th:field=*{label} placeholder="Label" class="swal-content__input" th:type="text"></div>
+                              </div>
+                              <div class="row">
+                                  
+                                <div class="col-sm-6"><input th:field="*{longitude}" placeholder="longitude" class="swal-content__input" th:type="text"></div>
+                                
+                                <div class="col-sm-6"><input th:field="*{latitude}" placeholder="latitude" class="swal-content__input" th:type="text"></div>
+                              </div>
+                              <div class="row">
+                                
+                                  <div class="col-sm-8"><input th:field="*{ip}" placeholder="IP" class="swal-content__input" th:type="text"></div>
+                                  
+                                  <div class="col-sm-4"><input th:field="*{port}" placeholder="PORT" class="swal-content__input" th:type="number"></div>
+                              </div>
+                              <br>
+                            </form>    
+                          </div>
+                        <script>
+                          // store form HTML markup in a JS variable
+                          var formTemplate = $('#form-template > form').clone()[0];
+                              $('#form-template').remove();
+
+                              // prepare SweetAlert configuration
+                              var swalConfig = {
+                                title: 'New Sensor',
+                                content: formTemplate,
+                                button: {
+                                  text: 'Submit',
+                                  closeModal: false
+                                }
+                              };
+
+                              // handle clicks on the "Click me" button
+                              $('#click-me-btn').click(function () {
+                                swal(swalConfig);
+                              });
+
+                              // handle clicks on the "Submit" button of the modal form
+                              $('body').on('click', '.swal-button--confirm', function() {
+                                //simulateAjaxRequest();
+                                $("#datasourceForm").submit();
+                              });
+
+                              
+                        </script>
+                    </section>
+                    <section>
+                        LICENSE HERE
                     </section>
                   </div>
                 </div>                
         </div>
-    </body>
-</html>
